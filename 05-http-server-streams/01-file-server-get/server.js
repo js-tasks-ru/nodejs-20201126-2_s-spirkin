@@ -2,6 +2,7 @@ const url = require('url');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+const {Writable} = require('stream');
 
 const server = new http.Server();
 
@@ -17,14 +18,7 @@ server.on('request', (req, res) => {
       } else if (fs.existsSync(filepath)) {
         const rs = fs.createReadStream(filepath);
 
-        rs.on('readable', () => {
-          let data = rs.read();
-
-          while (data != null) {
-            res.write(data);
-            data = rs.read();
-          }
-        });
+        rs.pipe(res);
 
         rs.on('end', () => {
           res.statusCode = 200;
