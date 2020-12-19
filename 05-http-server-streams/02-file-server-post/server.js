@@ -7,7 +7,7 @@ const LimitSizeStream = require('./LimitSizeStream');
 
 const server = new http.Server();
 
-server.on('request', async (req, res) => {
+server.on('request', (req, res) => {
   const pathname = url.parse(req.url).pathname.slice(1);
   const filepath = path.join(__dirname, 'files', pathname);
   const FILE_LIMIT = 2 ** 20; // 1MB
