@@ -34,6 +34,7 @@ server.on('request', (req, res) => {
           if (err) {
             fs.unlink(filepath, (err) => {
               if (err) throw err;
+
               statusCode = 500;
               writable.end();
             });
@@ -44,9 +45,10 @@ server.on('request', (req, res) => {
 
         finished(limitSizeStream, (err) => {
           if (err) {
-            if (['LIMIT_EXCEEDED'].includes(err)) {
+            if (['LIMIT_EXCEEDED'].includes(err.code)) {
               fs.unlink(filepath, (err) => {
                 if (err) throw err;
+
                 statusCode = 413;
                 writable.end();
               });
@@ -63,12 +65,13 @@ server.on('request', (req, res) => {
           if (err) {
             fs.unlink(filepath, (err) => {
               if (err) throw err;
+
               statusCode = 500;
-              res.end();
+              res.end('data');
             });
           } else {
             res.statusCode = statusCode;
-            res.end();
+            res.end('data');
           }
         });
       }
